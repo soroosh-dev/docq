@@ -1,0 +1,48 @@
+{% load static %}
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff;
+      color: #000000;
+      font-family: 'Raleway', sans-serif;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .content {
+      padding: 40px 20px;
+      text-align: left;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <table style="width: 100%;">
+      <tr>
+        <td colspan="2" class="content">
+          <p>
+            <span><strong>Hey there!</strong></span>
+          </p>
+          <p><strong>{{sender}}</strong> is interested to form a partnership with your community {{receiver}}.</p>
+          <p>
+            Check it out in your dashboard.
+          </p>
+          <br>
+        </td>
+      </tr>
+    </table>
+  </div>
+</body>
+</html>

@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE HTML>
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Welcome</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff;
+      color: #000000;
+      font-family: 'Raleway', sans-serif;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .content {
+      padding: 40px 20px;
+      text-align: left;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <table style="width: 100%;">
+      <tr>
+        <td colspan="2" class="content">
+          <p>
+            <span><strong>Hey there! <br> Welcome.</strong></span>
+          </p>
+          <p>In order to activate your account click on <a href="{{ activation_link }}" target="_blank" title="Activation link">this link</a> and you are good to go.</p>
+          <p>Activation link: <a href="{{activation_link}}" target="_blank" title="activation link">{{activation_link}}</a>
+          <br>
+        </td>
+      </tr>
+    </table>
+  </div>
+</body>
+</html>

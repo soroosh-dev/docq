@@ -1,0 +1,7 @@
+requests
+djangorestframework
+djangorestframework-simplejwt
+python-decouple
+celery
+redis
+web3

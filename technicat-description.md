@@ -1,0 +1,2 @@
+- All django apps are placed inside apps/ directory. such as `apps/core` or `apps/knockknock` apps that are accessed with `apps.core` and `apps.knockknock` identifiers.
+-  Implement all view classes using APIView
