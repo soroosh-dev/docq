@@ -242,7 +242,7 @@ class DocumentQueryWithResponseView(APIView):
         # Generate response using OpenAI
         try:
             response = client.chat.completions.create(
-                model="gpt-3.5-turbo",
+                model="gpt-4o-mini",
                 messages=[
                     {"role": "system", "content": "You are a helpful assistant that answers questions based on the provided context. If the answer cannot be found in the context, say so."},
                     {"role": "user", "content": f"Context:\n{context}\n\nQuestion: {query}"}
