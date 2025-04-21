@@ -208,11 +208,13 @@ class DocumentQueryWithResponseView(APIView):
                     {"detail": "Invalid document ID format"},
                     status=status.HTTP_400_BAD_REQUEST
                 )
-
-        # Get accessible documents for the user
-        accessible_doc_records = DocumentPermission.objects.filter(user=request.user)
-        doc_ids = [r.document_id for r in accessible_doc_records]
-        accessible_docs = Document.objects.filter(id__in=doc_ids)
+        if not request.user.is_staff:
+            # Get accessible documents for the user
+            accessible_doc_records = DocumentPermission.objects.filter(user=request.user)
+            doc_ids = [r.document_id for r in accessible_doc_records]
+            accessible_docs = Document.objects.filter(id__in=doc_ids)
+        else:
+            accessible_docs = Document.objects.all()
 
         # If specific document IDs were provided, filter to only those that are accessible
         if document_ids:
