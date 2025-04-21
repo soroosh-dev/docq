@@ -26,7 +26,7 @@ User = get_user_model()
 class DocumentQueryView(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
+    def post(self, request):
         query = request.data.get('q', '')
         if not query:
             return Response(
@@ -44,13 +44,15 @@ class DocumentQueryView(APIView):
                     {"detail": "Invalid document ID format"},
                     status=status.HTTP_400_BAD_REQUEST
                 )
-
-        # Get accessible documents for the user
-        accessible_doc_records = DocumentPermission.objects.filter(user=request.user)
-        doc_ids = [r.document_id for r in accessible_doc_records]
-        accessible_docs = Document.objects.filter(
-            id__in=doc_ids
-        )
+        if not request.user.is_staff:
+            # Get accessible documents for the user
+            accessible_doc_records = DocumentPermission.objects.filter(user=request.user)
+            doc_ids = [r.document_id for r in accessible_doc_records]
+            accessible_docs = Document.objects.filter(
+                id__in=doc_ids
+            )
+        else:
+            accessible_docs = Document.objects.all()
 
         # If specific documents are requested, filter them by accessibility
         if document_ids:
@@ -83,7 +85,11 @@ class DocumentListView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        documents = Document.objects.all()
+        if not request.user.is_staff:
+            user_documents = DocumentPermission.objects.filter(user=request.user).values_list('document_id', flat=True)
+            documents = Document.objects.filter(id__in=user_documents)
+        else:
+            documents = Document.objects.all()
         serializer = DocumentSerializer(documents, many=True, context={"request": request})
         return Response(serializer.data)
 
@@ -97,7 +103,8 @@ class DocumentDetailView(APIView):
 
     def delete(self, request, pk):
         document = get_object_or_404(Document, pk=pk)
-        delete_documents_with_prefix(f"{document.id}_")
+        if document.is_processed:
+            delete_documents_with_prefix(f"{document.id}_")
         document.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
