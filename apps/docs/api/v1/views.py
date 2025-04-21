@@ -255,7 +255,7 @@ class DocumentQueryWithResponseView(APIView):
                 "response": response.choices[0].message.content,
                 "sources": [{
                     "document_id": chunk['document'].id,
-                    "document_name": chunk['document'].name,
+                    "document_name": chunk['document'].original_name,
                     "text": chunk['text'],
                     "similarity": chunk['distance']
                 } for chunk in relevant_chunks]
