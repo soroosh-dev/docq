@@ -2,7 +2,7 @@ import os
 import glob
 import uuid
 import chromadb
-from typing import List
+from typing import List, Optional
 from chromadb.config import Settings
 from chromadb.utils import embedding_functions
 from openai import OpenAI
@@ -107,13 +107,15 @@ except:
         metadata={"hnsw:space": "cosine"}
     )
 
-def query_documents(query_text: str, n_results: int = 5):
+def query_documents(query_text: str, n_results: int = 5, document_ids: Optional[List[int]] = None):
     """
     Query the Chroma DB for relevant document chunks based on the input query.
     
     Args:
         query_text (str): The query text to search for
         n_results (int): Number of results to return
+        document_ids (List[int], optional): List of document IDs to search within. 
+            If None, searches all documents.
         
     Returns:
         list: List of dictionaries containing:
@@ -121,9 +123,17 @@ def query_documents(query_text: str, n_results: int = 5):
             - document: The Document object the chunk belongs to
             - distance: The similarity score
     """
+    # Prepare where clause for filtering by document IDs if provided
+    where = None
+    if document_ids:
+        where = {
+            "document_id": {"$in": [str(doc_id) for doc_id in document_ids]}
+        }
+    
     results = collection.query(
         query_texts=[query_text],
         n_results=n_results,
+        where=where,
         include=["metadatas", "documents", "distances"]
     )
     
@@ -142,3 +152,19 @@ def query_documents(query_text: str, n_results: int = 5):
             continue
             
     return formatted_results
+
+def delete_documents_with_prefix(prefix):
+    # Step 1: Get all document IDs
+    results = collection.query(
+        query_texts=[""],
+        n_results=collection.count()
+    )
+    all_ids = results["ids"][0]
+
+    # Step 2: Filter IDs with the prefix
+    ids_to_delete = [doc_id for doc_id in all_ids if doc_id.startswith(prefix)]
+
+    # Step 3: Delete them
+    if ids_to_delete:
+        collection.delete(ids=ids_to_delete)
+    return len(ids_to_delete)

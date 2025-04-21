@@ -24,3 +24,18 @@ class Document(models.Model):
         if self.txt_file:
             self.txt_file.delete()
         super().delete(*args, **kwargs)
+
+class DocumentPermission(models.Model):
+    document = models.ForeignKey(Document, on_delete=models.CASCADE, related_name='permissions')
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='document_permissions')
+    granted_at = models.DateTimeField(auto_now_add=True)
+    granted_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='granted_permissions')
+
+    class Meta:
+        unique_together = ('document', 'user')
+        indexes = [
+            models.Index(fields=['document', 'user']),
+        ]
+
+    def __str__(self):
+        return f"{self.user.username} - {self.document.original_name}"

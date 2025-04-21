@@ -12,7 +12,7 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # Get all unprocessed documents
-        documents = Document.objects.filter(is_processed=False)
+        documents = Document.objects.filter(is_processed=False, extracted=True)
         
         for document in documents:
             try:
