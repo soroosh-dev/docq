@@ -1,0 +1,1 @@
+const SERVER_URL = 'http://docq.runflare.run/api/v1/';
