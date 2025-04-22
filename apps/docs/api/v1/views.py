@@ -104,9 +104,9 @@ class DocumentDetailView(APIView):
     def delete(self, request, pk):
         document = get_object_or_404(Document, pk=pk)
         if document.is_processed:
-            delete_documents_with_prefix(f"{document.id}_")
+            n = delete_documents_with_prefix(f"{document.id}_")
         document.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response({"deleted": n}, status=status.HTTP_204_NO_CONTENT)
 
 class DocumentDownloadView(APIView):
     permission_classes = [IsAuthenticated]
