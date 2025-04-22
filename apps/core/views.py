@@ -12,7 +12,7 @@ def register_view(request):
     """Render the registration page."""
     return render(request, 'core/register.html')
 
-@login_required
+# @login_required
 @require_http_methods(["GET"])
 def dashboard_view(request):
     """Render the dashboard page."""
